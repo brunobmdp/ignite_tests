@@ -1,5 +1,6 @@
+import { IStatementDTO } from "../../dtos/IStatementDTO";
 import { Statement } from "../../entities/Statement";
-import { ICreateStatementDTO } from "../../useCases/createStatement/ICreateStatementDTO";
+
 import { IGetBalanceDTO } from "../../useCases/getBalance/IGetBalanceDTO";
 import { IGetStatementOperationDTO } from "../../useCases/getStatementOperation/IGetStatementOperationDTO";
 import { IStatementsRepository } from "../IStatementsRepository";
@@ -7,7 +8,7 @@ import { IStatementsRepository } from "../IStatementsRepository";
 export class InMemoryStatementsRepository implements IStatementsRepository {
   private statements: Statement[] = [];
 
-  async create(data: ICreateStatementDTO): Promise<Statement> {
+  async create(data: IStatementDTO): Promise<Statement> {
     const statement = new Statement();
 
     Object.assign(statement, data);

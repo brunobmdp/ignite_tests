@@ -1,7 +1,8 @@
 import { getRepository, Repository } from "typeorm";
+import { IStatementDTO } from "../dtos/IStatementDTO";
 
 import { Statement } from "../entities/Statement";
-import { ICreateStatementDTO } from "../useCases/createStatement/ICreateStatementDTO";
+
 import { IGetBalanceDTO } from "../useCases/getBalance/IGetBalanceDTO";
 import { IGetStatementOperationDTO } from "../useCases/getStatementOperation/IGetStatementOperationDTO";
 import { IStatementsRepository } from "./IStatementsRepository";
@@ -17,13 +18,15 @@ export class StatementsRepository implements IStatementsRepository {
     user_id,
     amount,
     description,
-    type
-  }: ICreateStatementDTO): Promise<Statement> {
+    type,
+    sender_id
+  }: IStatementDTO): Promise<Statement> {
     const statement = this.repository.create({
       user_id,
       amount,
       description,
-      type
+      type,
+      sender_id
     });
 
     return this.repository.save(statement);
@@ -45,10 +48,10 @@ export class StatementsRepository implements IStatementsRepository {
     });
 
     const balance = statement.reduce((acc, operation) => {
-      if (operation.type === 'deposit') {
-        return acc + operation.amount;
+      if ((operation.type === 'deposit') || (operation.sender_id)) {
+        return acc + operation.amount*1;
       } else {
-        return acc - operation.amount;
+        return acc - operation.amount*1;
       }
     }, 0)
 
